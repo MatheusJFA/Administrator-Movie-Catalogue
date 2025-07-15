@@ -1,2 +1,5 @@
 rootProject.name = 'Administrator-Movie-Catalogue'
+include 'infrastructure'
+include 'application'
+include 'domain'
 
