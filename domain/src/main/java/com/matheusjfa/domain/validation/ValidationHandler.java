@@ -7,7 +7,7 @@ public interface ValidationHandler {
 
     ValidationHandler append(ValidationHandler handler) throws Exception;
 
-    ValidationHandler validate(Validation validation) throws Exception;
+    <T> T validate(Validation<T> validation) throws Exception;
 
     List<ErrorMessage> getErrors();
 

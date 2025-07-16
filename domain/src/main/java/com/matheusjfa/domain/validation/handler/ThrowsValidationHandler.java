@@ -19,14 +19,12 @@ public class ThrowsValidationHandler implements ValidationHandler {
     }
 
     @Override
-    public ValidationHandler validate(Validation validation) throws Exception {
+    public <T> T validate(Validation<T> validation) throws Exception {
         try {
-            validation.validate();
-        } catch (final DomainException e) {
+            return validation.validate();
+        } catch (final Exception e) {
             throw DomainException.with(new ErrorMessage(e.getMessage()));
         }
-
-        return this;
     }
 
     @Override

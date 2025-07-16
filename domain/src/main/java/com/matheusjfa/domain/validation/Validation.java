@@ -1,5 +1,5 @@
 package com.matheusjfa.domain.validation;
 
-public interface Validation {
-    void validate() throws Exception;
+public interface Validation<T> {
+    T validate() throws Exception;
 }
