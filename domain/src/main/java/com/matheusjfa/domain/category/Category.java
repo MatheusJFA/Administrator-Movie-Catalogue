@@ -6,8 +6,8 @@ import com.matheusjfa.domain.validation.ValidationHandler;
 import java.time.Instant;
 
 public class Category extends AggregateRoot<CategoryID> {
-    private final String name;
-    private final String description;
+    private String name;
+    private String description;
     private boolean isActive;
     private final Instant createdAt;
     private Instant updatedAt;
@@ -60,7 +60,18 @@ public class Category extends AggregateRoot<CategoryID> {
         return this;
     }
 
+    public Category update(final String name, final String description, final boolean isActive) {
+        this.name = name;
+        this.description = description;
 
+        if (isActive) {
+            this.activate();
+        } else {
+            this.deactivate();
+        }
+
+        return this;
+    }
 
     @Override
     public void validate(ValidationHandler handler) throws Exception {
@@ -91,6 +102,4 @@ public class Category extends AggregateRoot<CategoryID> {
     public Instant getDeletedAt() {
         return deletedAt;
     }
-
-
 }
