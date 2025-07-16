@@ -3,17 +3,10 @@ package com.matheusjfa.domain.category;
 import com.matheusjfa.domain.exceptions.DomainException;
 import com.matheusjfa.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Tags({
-        @Tag("unit"),
-        @Tag("domain"),
-        @Tag("category")
-})
 public class CategoryTest {
     @Test
     @DisplayName("Deve retornar uma categoria válida quando chamar o método 'create' passando dados válidos")
