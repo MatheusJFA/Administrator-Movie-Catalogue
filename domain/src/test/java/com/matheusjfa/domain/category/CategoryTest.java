@@ -367,6 +367,7 @@ public class CategoryTest {
         assertEquals(updatedName, updatedCategory.getName());
         assertEquals(updatedDescription, updatedCategory.getDescription());
         assertFalse(updatedCategory.isActive());
+
         assertTrue(updatedAt.isBefore(updatedAtAfterUpdate) || updatedAt.equals(updatedAtAfterUpdate));
     }
 
