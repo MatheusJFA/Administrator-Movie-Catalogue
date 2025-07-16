@@ -5,7 +5,7 @@ import com.matheusjfa.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 
-public class Category extends AggregateRoot<CategoryID> {
+public class Category extends AggregateRoot<CategoryID> implements Cloneable {
     private String name;
     private String description;
     private boolean isActive;
@@ -37,6 +37,30 @@ public class Category extends AggregateRoot<CategoryID> {
         final var deleted = (isActive) ? null : now;
 
         return new Category(id, name, description, isActive, now, now, deleted);
+    }
+
+    public static Category with(Category category) {
+        return new Category(
+                category.getId(),
+                category.getName(),
+                category.getDescription(),
+                category.isActive(),
+                category.getCreatedAt(),
+                category.getUpdatedAt(),
+                category.getDeletedAt()
+        );
+    }
+
+    public static Category with(
+            final CategoryID id,
+            final String name,
+            final String description,
+            final boolean isActive,
+            final Instant createdAt,
+            final Instant updatedAt,
+            final Instant deletedAt
+    ) {
+        return new Category(id, name, description, isActive, createdAt, updatedAt, deletedAt);
     }
 
     public Category activate() {
@@ -101,5 +125,10 @@ public class Category extends AggregateRoot<CategoryID> {
 
     public Instant getDeletedAt() {
         return deletedAt;
+    }
+
+    @Override
+    public Category clone() throws CloneNotSupportedException {
+        return (Category) super.clone();
     }
 }

@@ -9,12 +9,10 @@ public class CategoryValidator extends Validator {
     private final int MAX_NAME_LENGTH = 255;
 
     private final Category category;
-    private final ValidationHandler handler;
 
     public CategoryValidator(Category category, ValidationHandler handler) {
         super(handler);
         this.category = category;
-        this.handler = handler;
     }
 
     protected void validate() throws Exception {
@@ -23,11 +21,17 @@ public class CategoryValidator extends Validator {
 
     private void checkNameConstraints() throws Exception {
         final var name = category.getName();
-        if (name == null)
-            handler.append(new ErrorMessage("O nome da categoria não pode ser nulo"));
+        final var handler = getHandler();
 
-        if (name.isBlank())
+        if (name == null) {
+            handler.append(new ErrorMessage("O nome da categoria não pode ser nulo"));
+            return;
+        }
+
+        if (name.isBlank()) {
             handler.append(new ErrorMessage("O nome da categoria não pode ser vazio"));
+            return;
+        }
 
         final var nameLength = category.getName().trim().length();
 
