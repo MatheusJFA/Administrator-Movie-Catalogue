@@ -337,5 +337,68 @@ public class CategoryTest {
         assertTrue(updatedAt.isBefore(updatedAtAfterDeactivation) || updatedAt.equals(updatedAtAfterDeactivation));
     }
 
+    @Test
+    @DisplayName("Dado uma categoria válida, ao chamar o método 'update' com argumentos válidos, deve atualizar os campos corretamente")
+    public void givenAValidCategory_whenCallingMethodUpdate_thenFieldsShouldBeUpdated() {
+        // Arrange
+        String expectedName = "A Category";
+        String expectedDescription = "A Description";
+        boolean expectedIsActive = true;
 
+        final var category = Category.create(expectedName, expectedDescription, expectedIsActive);
+        final var updatedAt = category.getUpdatedAt();
+        assertDoesNotThrow(() -> {
+            category.validate(new ThrowsValidationHandler());
+        });
+
+        // Act
+        String updatedName = "Updated Name";
+        String updatedDescription = "Updated Description";
+
+        final var updatedCategory = category.update(updatedName, updatedDescription, false);
+        final var updatedAtAfterUpdate = updatedCategory.getUpdatedAt();
+
+        assertDoesNotThrow(() -> {
+            updatedCategory.validate(new ThrowsValidationHandler());
+        });
+
+        // Assert
+        assertNotNull(updatedCategory);
+        assertEquals(updatedName, updatedCategory.getName());
+        assertEquals(updatedDescription, updatedCategory.getDescription());
+        assertFalse(updatedCategory.isActive());
+        assertTrue(updatedAt.isBefore(updatedAtAfterUpdate) || updatedAt.equals(updatedAtAfterUpdate));
+    }
+
+    @Test
+    @DisplayName("Dado uma categoria válida, ao chamar o método 'update' com argumentos inválidos, deve lançar uma exceção")
+    public void givenAValidCategory_whenCallingMethodUpdateWithInvalidArguments_thenThrowException() {
+        // Arrange
+        String expectedName = "A Category";
+        String expectedDescription = "A Description";
+        boolean expectedIsActive = true;
+
+        final var category = Category.create(expectedName, expectedDescription, expectedIsActive);
+        final var updatedAt = category.getUpdatedAt();
+        assertDoesNotThrow(() -> {
+            category.validate(new ThrowsValidationHandler());
+        });
+
+        // Act & Assert
+        String updatedName = null; // Invalid name
+        String updatedDescription = "Updated Description";
+
+        Category updatedCategory = category.update(updatedName, updatedDescription, false);
+
+        final var exception = assertThrows(DomainException.class, () -> {
+            updatedCategory.validate(new ThrowsValidationHandler());
+        });
+
+        assertNotNull(exception);
+        String expectedMessage = "O nome da categoria não pode ser nulo";
+        assertEquals(expectedMessage, exception.getMessage());
+
+        int expectedErrorCount = 1;
+        assertEquals(expectedErrorCount, exception.getErrors().size());
+    }
 }
