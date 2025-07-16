@@ -10,9 +10,9 @@ public interface CategoryGateway {
 
     Category update(Category category);
 
-    void deleteById(String id);
+    void deleteById(CategoryID id);
 
-    Optional<Category> findById(String id);
+    Optional<Category> findById(CategoryID id);
 
     Pagination<Category> findAll(CategorySearchQuery query);
 }
