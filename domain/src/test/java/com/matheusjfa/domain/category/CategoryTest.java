@@ -146,10 +146,10 @@ public class CategoryTest {
     }
 
     @Test
-    @DisplayName("Deve lançar uma exceção quando chamar o método 'validate' passando um nome vazio")
+    @DisplayName("Deve lançar uma exceção quando chamar o método 'validate' passando um nome vazio (contendo apenas espaços)")
     public void givenAnInvalidCategoryWithEmptyName_whenCallingMethodCreate_thenThrowException() {
         // Arrange
-        String expectedName = "";
+        String expectedName = "   ";
         String expectedDescription = "A Description";
         boolean expectedIsActive = true;
 
@@ -173,7 +173,7 @@ public class CategoryTest {
     @DisplayName("Deve lançar uma exceção quando chamar o método 'validate' passando um nome com menos de 3 caracteres")
     public void givenAnInvalidCategoryWithShortName_whenCallingMethodCreate_thenThrowException() {
         // Arrange
-        String expectedName = "ab";
+        String expectedName = "ab ";
         String expectedDescription = "A Description";
         boolean expectedIsActive = true;
 
