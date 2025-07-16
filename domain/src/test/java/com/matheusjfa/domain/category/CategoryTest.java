@@ -217,4 +217,125 @@ public class CategoryTest {
         assertEquals(expectedErrorCount, exception.getErrors().size());
     }
 
+    @Test
+    @DisplayName("Não deve lançar uma exceção quando chamar o método 'validate' passando um nome válido")
+    public void givenAValidCategory_whenCallingMethodCreate_thenNotThrowException() {
+        // Arrange
+        String expectedName = "A Category";
+        String expectedDescription = "A Description";
+        boolean expectedIsActive = true;
+
+        final var category = Category.create(expectedName, expectedDescription, expectedIsActive);
+
+        // Act & Assert
+        assertDoesNotThrow(() -> {
+            category.validate(new ThrowsValidationHandler());
+        });
+    }
+
+    @Test
+    @DisplayName("Dado uma categoria activa, ao chamar o método 'deactivate', a categoria deve ser marcada como inativa")
+    public void givenAValidCategory_whenCallingMethodDeactivate_thenCategoryShouldBeInactive() {
+        // Arrange
+        String expectedName = "A Category";
+        String expectedDescription = "A Description";
+        boolean expectedIsActive = true;
+
+        final var category = Category.create(expectedName, expectedDescription, expectedIsActive);
+        final var updatedAt = category.getUpdatedAt();
+
+        assertTrue(category.isActive());
+        assertNull(category.getDeletedAt());
+
+        // Act
+        final var deactivatedCategory = category.deactivate();
+        final var updatedAtAfterDeactivation = deactivatedCategory.getUpdatedAt();
+
+        // Assert
+        assertFalse(category.isActive());
+        assertNotNull(category.getDeletedAt());
+
+        assertTrue(updatedAt.isBefore(updatedAtAfterDeactivation) || updatedAt.equals(updatedAtAfterDeactivation));
+    }
+
+    @Test
+    @DisplayName("Dado uma categoria inativa, ao chamar o método 'activate', a categoria deve ser marcada como ativa")
+    public void givenAValidInactiveCategory_whenCallingMethodActivate_thenCategoryShouldBeActive() {
+        // Arrange
+        String expectedName = "A Category";
+        String expectedDescription = "A Description";
+        boolean expectedIsActive = false;
+
+        final var category = Category.create(expectedName, expectedDescription, expectedIsActive);
+        final var updatedAt = category.getUpdatedAt();
+
+        assertFalse(category.isActive());
+        assertNotNull(category.getDeletedAt());
+
+        // Act
+        final var activatedCategory = category.activate();
+        final var updatedAtAfterActivation = activatedCategory.getUpdatedAt();
+
+        // Assert
+        assertTrue(category.isActive());
+        assertNull(category.getDeletedAt());
+
+        assertTrue(updatedAt.isBefore(updatedAtAfterActivation) || updatedAt.equals(updatedAtAfterActivation));
+    }
+
+
+    @Test
+    @DisplayName("Dado uma categoria ativa, ao chamar o método 'activate', a categoria deve permanecer ativa")
+    public void givenAnActiveCategory_whenCallingMethodActivate_thenCategoryShouldRemainActive() {
+        // Arrange
+        String expectedName = "A Category";
+        String expectedDescription = "A Description";
+        boolean expectedIsActive = true;
+
+        final var category = Category.create(expectedName, expectedDescription, expectedIsActive);
+        final var updatedAt = category.getUpdatedAt();
+        final var deletedAt = category.getDeletedAt();
+
+        assertTrue(category.isActive());
+        assertNull(deletedAt);
+
+        // Act
+        final var activatedCategory = category.activate();
+        final var updatedAtAfterActivation = activatedCategory.getUpdatedAt();
+
+        // Assert
+        assertTrue(activatedCategory.isActive());
+        assertNull(activatedCategory.getDeletedAt());
+
+        assertTrue(updatedAt.isBefore(updatedAtAfterActivation) || updatedAt.equals(updatedAtAfterActivation));
+    }
+
+
+    @Test
+    @DisplayName("Dado uma categoria inativa, ao chamar o método 'deactivate', a categoria deve permanecer inativa")
+    public void givenAnInactiveCategory_whenCallingMethodDeactivate_thenCategoryShouldRemainInactive() {
+        // Arrange
+        String expectedName = "A Category";
+        String expectedDescription = "A Description";
+        boolean expectedIsActive = false;
+
+        final var category = Category.create(expectedName, expectedDescription, expectedIsActive);
+        final var updatedAt = category.getUpdatedAt();
+        final var deletedAt = category.getDeletedAt();
+
+        assertFalse(category.isActive());
+        assertNotNull(deletedAt);
+
+        // Act
+        final var deactivatedCategory = category.deactivate();
+        final var updatedAtAfterDeactivation = deactivatedCategory.getUpdatedAt();
+
+        // Assert
+        assertFalse(deactivatedCategory.isActive());
+        assertNotNull(deactivatedCategory.getDeletedAt());
+
+        assertTrue(updatedAt.isBefore(updatedAtAfterDeactivation) || updatedAt.equals(updatedAtAfterDeactivation));
+    }
+
+
 }
