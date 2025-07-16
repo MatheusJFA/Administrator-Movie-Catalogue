@@ -1,5 +1,7 @@
 package com.matheusjfa.domain.category;
 
+import com.matheusjfa.domain.exceptions.DomainException;
+import com.matheusjfa.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -36,7 +38,7 @@ public class CategoryTest {
 
 
     @Test
-    @DisplayName("Deve retornar uma categoria válida quando chamar o método 'create' passando dados válidos sem descrição")
+    @DisplayName("Deve retornar uma categoria válida quando chamar o método 'create' passando dados válidos com descrição nula")
     public void givenAnValidCategoryWithoutDescription_whenCallingMethodCreate_thenReturnCategory() {
         // Arrange
         String expectedName = "A Category";
@@ -95,7 +97,7 @@ public class CategoryTest {
         assertFalse(category.isActive());
         assertNotNull(category.getCreatedAt());
         assertNotNull(category.getUpdatedAt());
-        assertNull(category.getDeletedAt());
+        assertNotNull(category.getDeletedAt());
     }
 
     @Test
@@ -116,25 +118,27 @@ public class CategoryTest {
         assertFalse(category.isActive());
         assertNotNull(category.getCreatedAt());
         assertNotNull(category.getUpdatedAt());
-        assertNull(category.getDeletedAt());
+        assertNotNull(category.getDeletedAt());
     }
 
     @Test
-    @DisplayName("Deve lançar uma exceção quando chamar o método 'create' passando um nome nulo")
+    @DisplayName("Deve lançar uma exceção quando chamar o método 'validate' passando um nome nulo")
     public void givenAnInvalidCategory_whenCallingMethodCreate_thenThrowException() {
         // Arrange
         String expectedName = null;
         String expectedDescription = "A Description";
         boolean expectedIsActive = true;
 
+        final var category = Category.create(expectedName, expectedDescription, expectedIsActive);
+
         // Act
         final var exception = assertThrows(DomainException.class, () -> {
-            Category.create(expectedName, expectedDescription, expectedIsActive);
+            category.validate(new ThrowsValidationHandler());
         });
 
         // Assert
         assertNotNull(exception);
-        String expectedMessage = "O campo nome não pode ser vazio ou nulo";
+        String expectedMessage = "O nome da categoria não pode ser nulo";
         assertEquals(expectedMessage, exception.getMessage());
 
         int expectedErrorCount = 1;
@@ -142,21 +146,71 @@ public class CategoryTest {
     }
 
     @Test
-    @DisplayName("Deve lançar uma exceção quando chamar o método 'create' passando um nome vazio")
+    @DisplayName("Deve lançar uma exceção quando chamar o método 'validate' passando um nome vazio")
     public void givenAnInvalidCategoryWithEmptyName_whenCallingMethodCreate_thenThrowException() {
         // Arrange
         String expectedName = "";
         String expectedDescription = "A Description";
         boolean expectedIsActive = true;
 
+        final var category = Category.create(expectedName, expectedDescription, expectedIsActive);
+
         // Act
         final var exception = assertThrows(DomainException.class, () -> {
-            Category.create(expectedName, expectedDescription, expectedIsActive);
+            category.validate(new ThrowsValidationHandler());
         });
 
         // Assert
         assertNotNull(exception);
-        String expectedMessage = "O campo nome não pode ser vazio ou nulo";
+        String expectedMessage = "O nome da categoria não pode ser vazio";
+        assertEquals(expectedMessage, exception.getMessage());
+
+        int expectedErrorCount = 1;
+        assertEquals(expectedErrorCount, exception.getErrors().size());
+    }
+
+    @Test
+    @DisplayName("Deve lançar uma exceção quando chamar o método 'validate' passando um nome com menos de 3 caracteres")
+    public void givenAnInvalidCategoryWithShortName_whenCallingMethodCreate_thenThrowException() {
+        // Arrange
+        String expectedName = "ab";
+        String expectedDescription = "A Description";
+        boolean expectedIsActive = true;
+
+        final var category = Category.create(expectedName, expectedDescription, expectedIsActive);
+
+        // Act
+        final var exception = assertThrows(DomainException.class, () -> {
+            category.validate(new ThrowsValidationHandler());
+        });
+
+        // Assert
+        assertNotNull(exception);
+        String expectedMessage = "O nome da categoria deve ter entre 3 e 255 caracteres";
+        assertEquals(expectedMessage, exception.getMessage());
+
+        int expectedErrorCount = 1;
+        assertEquals(expectedErrorCount, exception.getErrors().size());
+    }
+
+    @Test
+    @DisplayName("Deve lançar uma exceção quando chamar o método 'validate' passando um nome com mais de 255 caracteres")
+    public void givenAnInvalidCategoryWithLongName_whenCallingMethodCreate_thenThrowException() {
+        // Arrange
+        String expectedName = "a".repeat(256);
+        String expectedDescription = "A Description";
+        boolean expectedIsActive = true;
+
+        final var category = Category.create(expectedName, expectedDescription, expectedIsActive);
+
+        // Act
+        final var exception = assertThrows(DomainException.class, () -> {
+            category.validate(new ThrowsValidationHandler());
+        });
+
+        // Assert
+        assertNotNull(exception);
+        String expectedMessage = "O nome da categoria deve ter entre 3 e 255 caracteres";
         assertEquals(expectedMessage, exception.getMessage());
 
         int expectedErrorCount = 1;
