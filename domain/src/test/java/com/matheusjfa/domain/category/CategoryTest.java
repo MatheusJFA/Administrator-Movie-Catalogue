@@ -15,6 +15,7 @@ public class CategoryTest {
         String expectedName = "A Category";
         String expectedDescription = "A Description";
         boolean expectedIsActive = true;
+
         // Act
         Category category = Category.create(expectedName, expectedDescription, expectedIsActive);
 
@@ -37,6 +38,7 @@ public class CategoryTest {
         String expectedName = "A Category";
         String expectedDescription = null;
         boolean expectedIsActive = true;
+
         // Act
         Category category = Category.create(expectedName, expectedDescription, expectedIsActive);
 
@@ -58,6 +60,7 @@ public class CategoryTest {
         String expectedName = "A Category";
         String expectedDescription = "";
         boolean expectedIsActive = true;
+
         // Act
         Category category = Category.create(expectedName, expectedDescription, expectedIsActive);
 
@@ -79,6 +82,7 @@ public class CategoryTest {
         String expectedName = "A Category";
         String expectedDescription = "A Description";
         boolean expectedIsActive = false;
+
         // Act
         Category category = Category.create(expectedName, expectedDescription, expectedIsActive);
 
@@ -100,6 +104,7 @@ public class CategoryTest {
         String expectedName = "A Category";
         String expectedDescription = "";
         boolean expectedIsActive = false;
+
         // Act
         Category category = Category.create(expectedName, expectedDescription, expectedIsActive);
 
@@ -211,7 +216,7 @@ public class CategoryTest {
     }
 
     @Test
-    @DisplayName("Não deve lançar uma exceção quando chamar o método 'validate' passando um nome válido")
+    @DisplayName("Não deve lançar uma exceção quando chamar o método 'validate' passando parametros válidos")
     public void givenAValidCategory_whenCallingMethodCreate_thenNotThrowException() {
         // Arrange
         String expectedName = "A Category";
